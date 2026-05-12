@@ -35,8 +35,9 @@ class OfferSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
-        if len(data['offerdetail_set']) != 3:
-            raise serializers.ValidationError('An offer must have exactly three details.')
+        offer_types = {detail['offer_type'] for detail in data['offerdetail_set']}
+        if offer_types != {'basic', 'standard', 'premium'}:
+            raise serializers.ValidationError('An offer must have exactly one basic, standard and premium detail.')
         return data
 
     def get_min_price(self, obj):
@@ -51,6 +52,14 @@ class OfferSerializer(serializers.ModelSerializer):
         for detail in details:
             OfferDetail.objects.create(offer=offer, **detail)
         return offer
+
+    def update(self, instance, validated_data):
+        details = validated_data.pop('offerdetail_set', [])
+        instance = super().update(instance, validated_data)
+        for detail in details:
+            offer_type = detail.get('offer_type')
+            OfferDetail.objects.filter(offer=instance, offer_type=offer_type).update(**detail)
+        return instance
 
 
 class OfferDetailURLSerializer(serializers.ModelSerializer):
