@@ -1,20 +1,25 @@
 from django.db.models import Min
 from rest_framework import generics
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from auth_app.api.permissions import IsBusinessUserOrAdmin
 from offers_app.api.pagination import OfferListPagination
-from offers_app.api.serializers import OfferSerializer, OfferListSerializer
-from offers_app.models import Offer
+from offers_app.api.serializers import OfferSerializer, OfferListSerializer, OfferDetailSerializer
+from offers_app.models import Offer, OfferDetail
 from profile_app.api.permissions import IsOwnerOrAdmin
 
 
 # Create your views here.
 class OfferDetailsView(RetrieveAPIView):
-    def get_queryset(self):
-        return Offer.objects.filter(id=self.kwargs['pk'])
+    permission_classes = [IsAuthenticated]
+    serializer_class = OfferDetailSerializer
+
+    def get_object(self):
+        return get_object_or_404(OfferDetail, pk=self.kwargs['pk'])
+
+
 
 class OfferRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()

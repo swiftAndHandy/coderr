@@ -2,8 +2,6 @@ from django.db.models import Min
 from rest_framework import serializers
 
 from offers_app.models import OfferDetail, Offer
-from profile_app.api.serializers import ProfileSerializer
-
 
 class OfferDetailSerializer(serializers.ModelSerializer):
     features = serializers.ListField(child=serializers.CharField())
