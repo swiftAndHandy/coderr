@@ -2,6 +2,7 @@ from django.db.models import Min
 from rest_framework import serializers
 
 from offers_app.models import OfferDetail, Offer
+from profile_app.api.serializers import ProfileSerializer
 
 
 class OfferDetailSerializer(serializers.ModelSerializer):
@@ -10,6 +11,7 @@ class OfferDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = OfferDetail
         fields = ['id', 'title', 'revisions', 'delivery_time_in_days', 'price', 'features', 'offer_type']
+
 
 class OfferSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -50,6 +52,46 @@ class OfferSerializer(serializers.ModelSerializer):
             OfferDetail.objects.create(offer=offer, **detail)
         return offer
 
+
+class OfferDetailURLSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='offerdetails-list', lookup_field='pk')
+
+    class Meta:
+        model = OfferDetail
+        fields = ['id', 'url']
+
+
 class OfferListSerializer(serializers.ModelSerializer):
-    # TODO: /api/offers/ endpoint
-    pass
+    min_price = serializers.SerializerMethodField()
+    min_delivery_time = serializers.SerializerMethodField()
+    details = OfferDetailURLSerializer(many=True, source="offerdetail_set")
+    user_details = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Offer
+        fields = [
+            'id',
+            'user',
+            'title',
+            'image',
+            'description',
+            'created_at',
+            'updated_at',
+            'details',
+            'min_price',
+            'min_delivery_time',
+            'user_details'
+        ]
+
+    def get_min_price(self, obj):
+        return obj.offerdetail_set.aggregate(Min('price'))['price__min']
+
+    def get_min_delivery_time(self, obj):
+        return obj.offerdetail_set.aggregate(Min('delivery_time_in_days'))['delivery_time_in_days__min']
+
+    def get_user_details(self, obj):
+        return {
+            'first_name': obj.user.profile.first_name,
+            'last_name': obj.user.profile.last_name,
+            'username': obj.user.username,
+        }

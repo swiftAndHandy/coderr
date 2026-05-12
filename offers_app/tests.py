@@ -63,6 +63,13 @@ class CreateOfferViewTest(APITestCase):
         response = self.client.post('/api/offers/', self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
+    def test_post_detail_issue(self):
+        token, _ = Token.objects.get_or_create(user=self.businessUser)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.data['details'].pop(2)
+        response = self.client.post('/api/offers/', self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_post_failed_as_customer(self):
         token, _ = Token.objects.get_or_create(user=self.customerUser)
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
