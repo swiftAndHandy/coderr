@@ -4,8 +4,12 @@ from profile_app.models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    type = serializers.CharField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+
     username = serializers.CharField(source='user.username', read_only=True)
-    email = serializers.EmailField(source='user.email', read_only=True)
+    email = serializers.EmailField(required=False)
 
     class Meta:
         model = Profile
@@ -23,3 +27,15 @@ class ProfileSerializer(serializers.ModelSerializer):
             'email',
             'created_at'
         ]
+
+    def update(self, instance, validated_data):
+        email = validated_data.pop('email', None)
+        if email:
+            instance.user.email = email
+            instance.user.save()
+        return super().update(instance, validated_data)
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['email'] = instance.user.email
+        return data
