@@ -1,5 +1,6 @@
 # Create your views here.
 from rest_framework import status
+from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -11,6 +12,8 @@ from review_app.models import Review
 
 class ReviewListCreateView(ListCreateAPIView):
     serializer_class = ReviewSerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['updated_at', 'rating']
 
     def get_permissions(self):
         if self.request.method == 'POST':
