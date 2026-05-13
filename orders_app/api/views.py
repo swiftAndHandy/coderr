@@ -58,6 +58,7 @@ class OrderUpdateDestroyView(
 class BaseOrderCountView(APIView):
     permission_classes = [IsAuthenticated]
     status = None
+    response_name = 'order_count'
 
     def get(self, request, *args, **kwargs):
         business_user_id = kwargs.get('business_user_id')
@@ -66,11 +67,12 @@ class BaseOrderCountView(APIView):
         if count == 0:
             get_object_or_404(User, id=business_user_id, profile__type='business')
 
-        return Response({'order_count': count})
+        return Response({self.response_name: count})
 
 
 class OrdersCompletedCountView(BaseOrderCountView):
     status = 'completed'
+    response_name = 'completed_order_count'
 
 
 class OrdersInProgressCountView(BaseOrderCountView):
