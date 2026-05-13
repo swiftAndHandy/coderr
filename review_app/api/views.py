@@ -1,12 +1,14 @@
 # Create your views here.
 from rest_framework import status
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, GenericAPIView
+from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from auth_app.api.permissions import IsCustomerUserOrAdmin
-from review_app.api.serializers import ReviewSerializer, ReviewCreateSerializer
+from review_app.api.permissions import IsAuthorOrAdmin
+from review_app.api.serializers import ReviewSerializer, ReviewCreateSerializer, ReviewUpdateSerializer
 from review_app.models import Review
 
 
@@ -36,3 +38,22 @@ class ReviewListCreateView(ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(ReviewSerializer(serializer.instance).data, status=status.HTTP_201_CREATED)
+
+class ReviewUpdateDestroyView(
+    UpdateModelMixin,
+    DestroyModelMixin,
+    GenericAPIView):
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthorOrAdmin]
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = ReviewUpdateSerializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(ReviewSerializer(instance).data, status=status.HTTP_200_OK)
