@@ -5,8 +5,11 @@ from offers_app.models import Offer, OfferDetail
 from orders_app.models import Order
 
 
-class OrderListSerializer(serializers.ModelSerializer):
+class OrderSerializer(serializers.ModelSerializer):
     features = serializers.ListField(child=serializers.CharField())
+
+    customer_user = serializers.PrimaryKeyRelatedField(read_only=True)
+    business_user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Order
