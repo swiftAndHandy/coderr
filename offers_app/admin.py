@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from offers_app.models import Offer
+from offers_app.models import Offer, OfferDetail
 
 
 # Register your models here.
@@ -12,5 +12,15 @@ class OfferAdmin(admin.ModelAdmin):
 
     has_image.boolean = True
 
+class OfferDetailAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'offer',
+        'price',
+        'delivery_time_in_days',
+        'offer_type',
+    ]
+
 
 admin.site.register(Offer, OfferAdmin)
+admin.site.register(OfferDetail, OfferDetailAdmin)
