@@ -1,14 +1,17 @@
+import profile
+
+from django.contrib.auth.models import User
 from django.db.models import Q
-from rest_framework import status
-from rest_framework.generics import ListCreateAPIView, GenericAPIView
+from rest_framework.generics import ListCreateAPIView, GenericAPIView, get_object_or_404
+from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from auth_app.api.permissions import IsCustomerUserOrAdmin, IsStaffMember, IsBusinessUserOrAdmin
+from auth_app.api.permissions import IsCustomerUserOrAdmin, IsStaffMember
 from orders_app.api.permissions import IsContractedOrStaff
 from orders_app.api.serializers import OrderSerializer, OrderCreateSerializer, OrderStatusUpdateSerializer
 from orders_app.models import Order
-from rest_framework.mixins import ListModelMixin, UpdateModelMixin, DestroyModelMixin
 
 
 # Create your views here.
@@ -51,3 +54,24 @@ class OrderUpdateDestroyView(
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+
+class BaseOrderCountView(APIView):
+    permission_classes = [IsAuthenticated]
+    status = None
+
+    def get(self, request, *args, **kwargs):
+        business_user_id = kwargs.get('business_user_id')
+        count = Order.objects.filter(business_user_id=business_user_id, status=self.status).count()
+
+        if count == 0:
+            get_object_or_404(User, id=business_user_id, profile__type='business')
+
+        return Response({'order_count': count})
+
+
+class OrdersCompletedCountView(BaseOrderCountView):
+    status = 'completed'
+
+
+class OrdersInProgressCountView(BaseOrderCountView):
+    status = 'in_progress'
