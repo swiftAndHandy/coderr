@@ -1,10 +1,12 @@
 from django.db.models import Q
+from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from auth_app.api.permissions import IsCustomerUserOrAdmin, IsStaffMember, IsBusinessUserOrAdmin
 from orders_app.api.permissions import IsContractedOrStaff
-from orders_app.api.serializers import OrderSerializer, OrderCreateSerializer
+from orders_app.api.serializers import OrderSerializer, OrderCreateSerializer, OrderStatusUpdateSerializer
 from orders_app.models import Order
 from rest_framework.mixins import ListModelMixin, UpdateModelMixin, DestroyModelMixin
 
@@ -41,7 +43,11 @@ class OrderUpdateDestroyView(
         return [IsStaffMember()]
 
     def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
+        instance = self.get_object()
+        serializer = OrderStatusUpdateSerializer(instance=instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(OrderSerializer(instance).data)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

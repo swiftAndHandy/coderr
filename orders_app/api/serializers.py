@@ -73,3 +73,8 @@ class OrderCreateSerializer(serializers.ModelSerializer):
             features=offer_detail.features,
             offer_type=offer_detail.offer_type,
         )
+
+class OrderStatusUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['status']
