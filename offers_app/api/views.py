@@ -30,7 +30,6 @@ class OfferRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         return [IsOwnerOrAdmin()]
 
 class OfferListCreateView(ListCreateAPIView):
-    queryset = Offer.objects.all()
     pagination_class = OfferListPagination
     filter_backends = [OrderingFilter, SearchFilter]
     search_fields = ["title", "description"]
