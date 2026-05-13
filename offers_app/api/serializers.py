@@ -33,6 +33,9 @@ class OfferSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
+        if self.context['request'].method=='PATCH' and 'offerdetail_set' not in data:
+            return data
+
         offer_types = {detail['offer_type'] for detail in data['offerdetail_set']}
         if offer_types != {'basic', 'standard', 'premium'}:
             raise serializers.ValidationError('An offer must have exactly one basic, standard and premium detail.')
