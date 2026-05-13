@@ -1,5 +1,4 @@
-from django.db.models import Min
-from rest_framework import generics
+from django.db.models import Min, Q
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -48,16 +47,28 @@ class OfferListCreateView(ListCreateAPIView):
         return [AllowAny()]
 
     def get_queryset(self):
-        offers = Offer.objects.annotate(min_price=Min("offerdetail__price"))
+        queryset = (
+            Offer.objects
+            .select_related("user")
+            .annotate(
+                min_price=Min("offerdetail__price"),
+                min_delivery=Min("offerdetail__delivery_time_in_days")
+            )
+        )
+
         creator_id = self.request.query_params.get("creator_id")
         min_price = self.request.query_params.get("min_price")
         max_delivery_time = self.request.query_params.get("max_delivery_time")
 
-        if creator_id:
-            offers = offers.filter(user=creator_id)
-        if min_price:
-            offers = offers.filter(offerdetail__price__gte=min_price)
-        if max_delivery_time:
-            offers = offers.filter(offerdetail__delivery_time_in_days__lte=max_delivery_time)
+        filters = Q()
 
-        return offers
+        if creator_id:
+            filters &= Q(user_id=creator_id)
+
+        if min_price:
+            filters &= Q(min_price__gte=min_price)
+
+        if max_delivery_time:
+            filters &= Q(min_delivery__lte=max_delivery_time)
+
+        return queryset.filter(filters)
