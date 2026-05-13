@@ -69,7 +69,6 @@ class BaseOrderCountView(APIView):
     def get(self, request, *args, **kwargs):
         business_user_id = kwargs.get('business_user_id')
         count = Order.objects.filter(business_user_id=business_user_id, status=self.status).count()
-        print(count)
         if count == 0:
             get_object_or_404(User, id=business_user_id, profile__type='business')
 

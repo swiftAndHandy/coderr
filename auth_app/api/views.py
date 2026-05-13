@@ -32,7 +32,6 @@ class LoginView(APIView):
     def post(self, request, *args, **kwargs):
         username = request.data.get('username').lower()
         user = authenticate(username=username, password=request.data.get('password'))
-        print(request.data)
         if not user:
             return Response({'message': 'Invalid username or password.'}, status=status.HTTP_400_BAD_REQUEST)
 
