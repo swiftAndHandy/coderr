@@ -32,6 +32,12 @@ class OrderListCreateAPIView(ListCreateAPIView):
             return [IsAuthenticated(), IsCustomerUserOrAdmin()]
         return [IsAuthenticated()]
 
+    def post(self, request, *args, **kwargs):
+        serializer = OrderCreateSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(OrderSerializer(serializer.instance).data)
+
 class OrderUpdateDestroyView(
     UpdateModelMixin,
     DestroyModelMixin,

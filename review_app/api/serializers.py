@@ -5,8 +5,6 @@ from review_app.models import Review
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    business_user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-
     class Meta:
         model = Review
         fields = [
@@ -23,6 +21,12 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['business_user', 'rating', 'description']
+
+    def create(self, validated_data):
+        return Review.objects.create(
+            reviewer=self.context['request'].user,
+            **validated_data
+        )
 
 class ReviewUpdateSerializer(serializers.ModelSerializer):
     class Meta:
