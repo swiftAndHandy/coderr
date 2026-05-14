@@ -40,7 +40,7 @@ class OfferSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
-        if self.context['request'].method=='PATCH' and 'offerdetail_set' not in data:
+        if self.context['request'].method=='PATCH':
             return data
 
         offer_types = {detail['offer_type'] for detail in data['offerdetail_set']}
