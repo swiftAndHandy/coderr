@@ -5,6 +5,9 @@ from offers_app.models import OfferDetail, Offer
 
 
 class OfferDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer for a single offer detail tier (basic, standard or premium).
+    """
     features = serializers.ListField(child=serializers.CharField())
 
     class Meta:
@@ -73,6 +76,9 @@ class OfferSerializer(serializers.ModelSerializer):
 
 
 class OfferDetailURLSerializer(serializers.ModelSerializer):
+    """
+    For offer details in list views, returning id and URL only.
+    """
     url = serializers.HyperlinkedIdentityField(view_name='offerdetails-list', lookup_field='pk')
 
     class Meta:

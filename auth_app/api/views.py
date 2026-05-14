@@ -10,6 +10,9 @@ from auth_app.api.serializers import RegistrationSerializer
 
 # Create your views here.
 class RegistrationView(generics.CreateAPIView):
+    """
+    Creates a new user account and returns an auth token.
+    """
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
@@ -28,6 +31,9 @@ class RegistrationView(generics.CreateAPIView):
         return Response(data, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
+    """
+    Authenticates a user by password and username and returns the auth token.
+    """
     def post(self, request, *args, **kwargs):
         username = request.data.get('username') #TODO: add .lower() after code review
         user = authenticate(username=username, password=request.data.get('password'))

@@ -9,6 +9,10 @@ from profile_app.models import Profile
 
 # Create your views here.
 class ProfileDetailView(RetrieveUpdateAPIView):
+    """
+    GET: Any authenticated user can view the profile details.
+    PATCH: Owner or Admin only.
+    """
     serializer_class = ProfileSerializer
 
     def get_object(self):
@@ -23,6 +27,9 @@ class ProfileDetailView(RetrieveUpdateAPIView):
             return [IsOwnerOrAdmin()]
 
 class BusinessProfileListView(ListAPIView):
+    """
+    Returns a list of all business profiles to authenticated users.
+    """
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
 
@@ -30,6 +37,9 @@ class BusinessProfileListView(ListAPIView):
         return Profile.objects.filter(type="business")
 
 class CustomerProfileListView(ListAPIView):
+    """
+    Returns a list of all customer profiles to authenticated users.
+    """
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
 

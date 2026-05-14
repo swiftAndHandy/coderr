@@ -6,6 +6,9 @@ from orders_app.models import Order
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    """
+    Read-Only serializer for the full Order model.
+    """
     features = serializers.ListField(child=serializers.CharField())
 
     customer_user = serializers.PrimaryKeyRelatedField(read_only=True)

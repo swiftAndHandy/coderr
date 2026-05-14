@@ -5,6 +5,9 @@ from review_app.models import Review
 
 
 class ReviewSerializer(serializers.ModelSerializer):
+    """
+    Read-Only serializer for the review model.
+    """
     class Meta:
         model = Review
         fields = [
@@ -44,6 +47,9 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         )
 
 class ReviewUpdateSerializer(serializers.ModelSerializer):
+    """
+    Restricts PATCH updated to rating and description.
+    """
     class Meta:
         model = Review
         fields = ['rating', 'description']

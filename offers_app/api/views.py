@@ -13,6 +13,9 @@ from profile_app.api.permissions import IsOwnerOrAdmin
 
 # Create your views here.
 class OfferDetailsView(RetrieveAPIView):
+    """
+    Returns a single offer by id.
+    """
     permission_classes = [IsAuthenticated]
     serializer_class = OfferDetailSerializer
 

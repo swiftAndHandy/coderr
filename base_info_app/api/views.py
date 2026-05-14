@@ -10,6 +10,9 @@ from review_app.models import Review
 
 # Create your views here.
 class PlatformInformation(APIView):
+    """
+    Returns public platform-wide statistics.
+    """
     permission_classes = [AllowAny]
 
     def get(self,request):

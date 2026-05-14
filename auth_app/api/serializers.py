@@ -5,6 +5,9 @@ from profile_app.models import Profile
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
+    """
+    Validates and creates a new user and a related profile.
+    """
     email = serializers.EmailField(required=True)
     password = serializers.CharField(write_only=True)
     repeated_password = serializers.CharField(write_only=True)
