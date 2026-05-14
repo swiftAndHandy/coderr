@@ -23,7 +23,7 @@ REST API backend for the Coderr freelance marketplace platform, built with Djang
 ### 1. Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/swiftAndHandy/coderr.git
 cd backend
 ```
 
