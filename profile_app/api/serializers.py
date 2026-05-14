@@ -11,6 +11,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     """
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     type = serializers.CharField(read_only=True)
+    file = serializers.ImageField(allow_null=True, required=False)
     created_at = serializers.DateTimeField(read_only=True)
 
     username = serializers.CharField(source='user.username', read_only=True)

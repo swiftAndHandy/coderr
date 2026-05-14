@@ -19,6 +19,7 @@ class OfferSerializer(serializers.ModelSerializer):
     On PATCH, providing details is optional.
     """
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+    image = serializers.ImageField(allow_null=True, required=False)
     details = OfferDetailSerializer(many=True, source="offerdetail_set")
     min_price = serializers.SerializerMethodField()
     min_delivery_time = serializers.SerializerMethodField()
