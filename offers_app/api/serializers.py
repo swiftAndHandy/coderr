@@ -41,7 +41,9 @@ class OfferSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if self.context['request'].method=='PATCH':
-            return data
+            for detail in data.get('offerdetail_set', []):
+                if 'offer_type' not in detail:
+                    raise serializers.ValidationError({'offer_type': 'This field is required.'})
 
         offer_types = {detail['offer_type'] for detail in data['offerdetail_set']}
         if offer_types != {'basic', 'standard', 'premium'}:
