@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db.models import Q
+from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, GenericAPIView, get_object_or_404
 from rest_framework.mixins import UpdateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAuthenticated
@@ -38,7 +39,7 @@ class OrderListCreateAPIView(ListCreateAPIView):
         serializer = OrderCreateSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(OrderSerializer(serializer.instance).data)
+        return Response(OrderSerializer(serializer.instance).data, status=status.HTTP_201_CREATED)
 
 class OrderUpdateDestroyView(
     UpdateModelMixin,
