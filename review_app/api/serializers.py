@@ -1,5 +1,3 @@
-from django.contrib.auth import base_user
-from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from profile_app.models import Profile

@@ -13,6 +13,10 @@ from review_app.models import Review
 
 
 class ReviewListCreateView(ListCreateAPIView):
+    """
+    GET: Authenticated users. Supports optional filtering via query params: business_user_id, reviewer_id.
+    POST: Customers or admins.
+    """
     serializer_class = ReviewSerializer
     filter_backends = [OrderingFilter]
     ordering_fields = ['updated_at', 'rating']
@@ -43,6 +47,9 @@ class ReviewUpdateDestroyView(
     UpdateModelMixin,
     DestroyModelMixin,
     GenericAPIView):
+    """
+    PATCH/DELETE: Author or admin only.
+    """
 
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer

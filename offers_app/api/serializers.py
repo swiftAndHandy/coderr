@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from offers_app.models import OfferDetail, Offer
 
+
 class OfferDetailSerializer(serializers.ModelSerializer):
     features = serializers.ListField(child=serializers.CharField())
 
@@ -77,6 +78,10 @@ class OfferDetailURLSerializer(serializers.ModelSerializer):
 
 
 class OfferListSerializer(serializers.ModelSerializer):
+    """
+    Read-only serializer for listing offers. Details are represented as id + URL only.
+    Includes user_details as compact subset of the creator's profile.
+    """
     min_price = serializers.SerializerMethodField()
     min_delivery_time = serializers.SerializerMethodField()
     details = OfferDetailURLSerializer(many=True, source="offerdetail_set")

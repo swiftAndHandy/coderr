@@ -1,4 +1,4 @@
-from django.db.models import Avg, Model
+from django.db.models import Avg
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView

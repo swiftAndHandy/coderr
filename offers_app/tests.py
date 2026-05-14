@@ -1,5 +1,3 @@
-from pyexpat import features
-
 from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.authtoken.models import Token

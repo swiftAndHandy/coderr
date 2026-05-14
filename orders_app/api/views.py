@@ -1,5 +1,3 @@
-import profile
-
 from django.contrib.auth.models import User
 from django.db.models import Q
 from rest_framework.generics import ListCreateAPIView, GenericAPIView, get_object_or_404
@@ -46,6 +44,10 @@ class OrderUpdateDestroyView(
     UpdateModelMixin,
     DestroyModelMixin,
     GenericAPIView):
+    """
+    PATCH: Restricted to the contracted business user or staff.
+    DELETE: Admin only.
+    """
 
     queryset = Order.objects.all()
     serializer_class = OrderSerializer

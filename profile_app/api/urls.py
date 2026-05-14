@@ -1,5 +1,4 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
 from profile_app.api.views import ProfileDetailView, BusinessProfileListView, CustomerProfileListView
 

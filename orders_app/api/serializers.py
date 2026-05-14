@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
-from offers_app.models import Offer, OfferDetail
+from offers_app.models import OfferDetail
 from orders_app.models import Order
 
 

@@ -21,6 +21,10 @@ class OfferDetailsView(RetrieveAPIView):
 
 
 class OfferRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    """
+    GET: Authenticated users.
+    PATCH/DELETE: Owner or admin only.
+    """
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
 
