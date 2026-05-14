@@ -32,7 +32,7 @@ class OfferRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     def get_permissions(self):
         if self.request.method == "GET":
             return [IsAuthenticated()]
-        return [IsOwnerOrAdmin()]
+        return [IsAuthenticated(), IsOwnerOrAdmin()]
 
 class OfferListCreateView(ListCreateAPIView):
     """
