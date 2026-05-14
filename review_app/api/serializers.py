@@ -20,6 +20,11 @@ class ReviewSerializer(serializers.ModelSerializer):
         ]
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
+    """
+    Creates a review. Validates that the target is a business user
+    and that the reviewer has not already reviewed them.
+    The reviewer is set from the request context, not the request body.
+    """
     class Meta:
         model = Review
         fields = ['business_user', 'rating', 'description']

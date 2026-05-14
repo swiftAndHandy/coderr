@@ -16,6 +16,10 @@ from orders_app.models import Order
 
 # Create your views here.
 class OrderListCreateAPIView(ListCreateAPIView):
+    """
+    GET: Returns all orders where the authenticated user is involved as customer or business.
+    POST: Customers only. Creates an order from an offer_detail_id and returns the full order.
+    """
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -62,6 +66,10 @@ class OrderUpdateDestroyView(
         return self.destroy(request, *args, **kwargs)
 
 class BaseOrderCountView(APIView):
+    """
+    Base class for order count endpoints.
+    Subclasses set `status` and `response_name` to differentiate between in-progress and completed counts.
+    """
     permission_classes = [IsAuthenticated]
     status = None
     response_name = 'order_count'

@@ -29,6 +29,10 @@ class OrderSerializer(serializers.ModelSerializer):
         ]
 
 class OrderCreateSerializer(serializers.ModelSerializer):
+    """
+    Accepts a single offer_detail_id and creates an order.
+    Offer detail fields are snapshotted so later edits to the offer don't affect existing orders.
+    """
     offer_detail_id = serializers.IntegerField(write_only=True)
 
     class Meta:
@@ -54,6 +58,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
         )
 
 class OrderStatusUpdateSerializer(serializers.ModelSerializer):
+    """Restricts PATCH updates to the status field only."""
     class Meta:
         model = Order
         fields = ['status']

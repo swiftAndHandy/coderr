@@ -30,6 +30,11 @@ class OfferRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
         return [IsOwnerOrAdmin()]
 
 class OfferListCreateView(ListCreateAPIView):
+    """
+    GET: Public offer list with pagination, search and ordering.
+         Supports optional query params: creator_id, min_price, max_delivery_time.
+    POST: Business users only. Creates an offer including nested details.
+    """
     pagination_class = OfferListPagination
     filter_backends = [OrderingFilter, SearchFilter]
     search_fields = ["title", "description"]

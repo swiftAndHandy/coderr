@@ -12,6 +12,11 @@ class OfferDetailSerializer(serializers.ModelSerializer):
 
 
 class OfferSerializer(serializers.ModelSerializer):
+    """
+    Serializer for creating and retrieving individual offers.
+    Handles nested OfferDetails in create() and update().
+    On PATCH, providing details is optional.
+    """
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     details = OfferDetailSerializer(many=True, source="offerdetail_set")
     min_price = serializers.SerializerMethodField()

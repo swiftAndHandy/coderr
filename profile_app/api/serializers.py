@@ -4,6 +4,11 @@ from profile_app.models import Profile
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer for business and customer profiles.
+    The email field lives on the User model and is handled separately
+    in update() and injected back in to_representation().
+    """
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     type = serializers.CharField(read_only=True)
     created_at = serializers.DateTimeField(read_only=True)
