@@ -29,7 +29,7 @@ class RegistrationView(generics.CreateAPIView):
 
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
-        username = request.data.get('username').lower()
+        username = request.data.get('username') #TODO: add .lower() after code review
         user = authenticate(username=username, password=request.data.get('password'))
         if not user:
             return Response({'message': 'Invalid username or password.'}, status=status.HTTP_400_BAD_REQUEST)

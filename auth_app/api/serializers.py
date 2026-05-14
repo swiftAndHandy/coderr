@@ -18,7 +18,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         if data['password'] != data['repeated_password']:
             raise serializers.ValidationError('Passwords must match')
         data.pop('repeated_password')
-        data['username'] = data['username'].lower()
+        data['username'] = data['username'] #TODO: Add .lower after Code Review
         data['email'] = data['email'].lower()
         return data
 
