@@ -1,4 +1,5 @@
 from django.db.models import Min, Q
+from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import RetrieveAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -72,11 +73,17 @@ class OfferListCreateView(ListCreateAPIView):
 
         if creator_id:
             filters &= Q(user_id=creator_id)
-
         if min_price:
+            try:
+                min_price = float(min_price)
+            except ValueError:
+                raise ValidationError({"min_price": "Must be a valid number."})
             filters &= Q(min_price__gte=min_price)
-
         if max_delivery_time:
+            try:
+                max_delivery_time = int(max_delivery_time)
+            except ValueError:
+                raise ValidationError({"max_delivery_time": "Must be an integer."})
             filters &= Q(min_delivery__lte=max_delivery_time)
 
         return queryset.filter(filters)
